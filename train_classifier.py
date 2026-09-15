@@ -24,6 +24,7 @@ NUM = ["src_bytes", "dst_bytes", "duration_s", "failed_logins", "same_srv_rate",
 
 
 def build_pipeline(model) -> Pipeline:
+    # keep preprocessing inside the pipeline so train/serve stay aligned
     pre = ColumnTransformer(
         [
             ("cat", OneHotEncoder(handle_unknown="ignore"), CAT),

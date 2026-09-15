@@ -1,45 +1,57 @@
-# 02 — IDS Alert Classifier
+# IDS Alert Classifier
 
-Supervised classification of IDS-style alerts into **benign** vs **attack** using classical sklearn models.
+Train a simple supervised model on Suricata/Snort-style alert fields and separate `benign` vs `attack`.
 
-## Learning goals
-
-- Build Suricata/Snort-like alert tables
-- Encode mixed categorical/numeric features
-- Compare Logistic Regression vs Random Forest
-- Report Precision / Recall / F1 / confusion matrix (SOC-critical)
+This is the kind of baseline I spin up before trying deep models — categorical signatures + a handful of numeric counters, then Logistic Regression / Random Forest.
 
 ## Layout
 
 ```
-02-ids-alert-classifier/
-├── README.md
-├── requirements.txt
-├── generate_alerts.py
-├── train_classifier.py
-├── data/ids_alerts.csv
-└── outputs/
-    ├── cm_logreg.png
-    ├── cm_rf.png
-    ├── metrics.json
-    └── best_model.txt
+generate_alerts.py      # synthetic alert table
+train_classifier.py     # train + metrics + confusion matrices
+data/ids_alerts.csv
+outputs/
+  metrics.json
+  cm_logreg.png
+  cm_rf.png
+  best_model.txt
 ```
 
-## Setup & run
+## Setup
 
 ```bash
-cd 02-ids-alert-classifier
 pip install -r requirements.txt
 python generate_alerts.py
 python train_classifier.py
 ```
 
-## Sample run (committed)
+Python 3.10+ recommended.
 
-| Artifact | Description |
-|----------|-------------|
-| `outputs/metrics.json` | Per-model precision/recall/F1 |
-| `outputs/cm_*.png` | Confusion matrices |
-| `outputs/best_model.txt` | Winning model name + macro F1 |
+## Features used
 
-On synthetic data, both models typically reach near-perfect scores (easy separable features by design).
+- Categorical: `signature`, `proto`
+- Numeric: bytes, duration, failed logins, same-srv rate, dst host count, severity
+
+One-hot + scaling goes through a sklearn `Pipeline`, so the same object can be dumped with joblib for later inference (local only; `.joblib` is ignored in git because it's bulky).
+
+## Sample run
+
+On the included synthetic set both models hit very high scores — the classes are intentionally separable so the pipeline is easy to demo. Check `outputs/metrics.json` and the confusion matrix PNGs.
+
+> Real IDS data is messier. Expect class imbalance, concept drift, and signature churn.
+
+## Why bother
+
+- Good interview / portfolio piece for Security Data Science
+- Easy to extend to multi-class (DoS / Probe / R2L / …)
+- Clear metrics that SOC folks actually care about (precision/recall on `attack`)
+
+## Possible next steps
+
+- Pull CIC-IDS or UNSW-NB15 and redo the same pipeline
+- Calibrate probabilities for alert thresholds
+- Tiny FastAPI wrapper for scoring a single JSON alert
+
+## License
+
+MIT
