@@ -1,0 +1,18 @@
+{
+  "logreg": {
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "classification_report": "              precision    recall  f1-score   support\n\n      attack      1.000     1.000     1.000        75\n      benign      1.000     1.000     1.000       175\n\n    accuracy                          1.000       250\n   macro avg      1.000     1.000     1.000       250\nweighted avg      1.000     1.000     1.000       250\n"
+  },
+  "rf": {
+    "precision_macro": 1.0,
+    "recall_macro": 1.0,
+    "f1_macro": 1.0,
+    "classification_report": "              precision    recall  f1-score   support\n\n      attack      1.000     1.000     1.000        75\n      benign      1.000     1.000     1.000       175\n\n    accuracy                          1.000       250\n   macro avg      1.000     1.000     1.000       250\nweighted avg      1.000     1.000     1.000       250\n"
+  },
+  "best": {
+    "name": "logreg",
+    "macro_f1": 1.0
+  }
+}
